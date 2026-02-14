@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+
+  mysql:
+    image: mysql:8.1
+    container_name: phandatalk-mysql
+    restart: always
+    environment:
+      MYSQL_DATABASE: phandatalk
+      MYSQL_USER: phanda
+      MYSQL_PASSWORD: phanda123
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      retries: 5
+      timeout: 5s
+
+  phandatalk-api:
+    build: .
+    container_name: phandatalk-api
+    depends_on:
+      mysql:
+        condition: service_healthy
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/phandatalk?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+      SPRING_DATASOURCE_USERNAME: phanda
+      SPRING_DATASOURCE_PASSWORD: phanda123
+
+volumes:
+  mysql_data:
