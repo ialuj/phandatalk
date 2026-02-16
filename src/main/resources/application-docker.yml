@@ -1,20 +1,22 @@
 spring:
   datasource:
-    url: ${SPRING_DATASOURCE_URL:jdbc:mysql://mysql:3306/phandatalk?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true}
+    url: ${SPRING_DATASOURCE_URL:jdbc:mysql://localhost:3306/phandatalk?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true}
     username: ${SPRING_DATASOURCE_USERNAME:phanda}
     password: ${SPRING_DATASOURCE_PASSWORD:phanda123}
 
   jpa:
+    show-sql: true
     hibernate:
       ddl-auto: none
-      dialect: org.hibernate.dialect.MySQL8Dialect
-    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
 
   liquibase:
     enabled: true
-    change-log: classpath:db/changelog/db.changelog-master.xml
-    contexts: docker
+    change-log: classpath:db/db.changelog-master.xml
     default-schema: phandatalk
 
-server:
-  port: 8080
+africastalking:
+  username: ${AFRICASTALKING_USERNAME}
+  apiKey: ${AFRICASTALKING_API_KEY}
